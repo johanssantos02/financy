@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { entrar } from "./acoes";
 
@@ -10,11 +9,11 @@ export function FormularioEntrar() {
   return (
     <form action={acao} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-zinc-300">
+        <label htmlFor="email" className="text-sm font-medium text-texto-sec">
           Email
         </label>
         <div className="relative">
-          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-500">
+          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-texto-off">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -38,17 +37,17 @@ export function FormularioEntrar() {
             required
             autoComplete="email"
             placeholder="seu@email.com"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 py-2.5 pl-10 pr-4 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-borda bg-fundo-sec py-2.5 pl-10 pr-4 text-sm text-texto placeholder:text-texto-off focus:border-primaria focus:outline-none focus:ring-1 focus:ring-primaria"
           />
         </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="senha" className="text-sm font-medium text-zinc-300">
+        <label htmlFor="senha" className="text-sm font-medium text-texto-sec">
           Senha
         </label>
         <div className="relative">
-          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-500">
+          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-texto-off">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -72,13 +71,13 @@ export function FormularioEntrar() {
             required
             autoComplete="current-password"
             placeholder="••••••••"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 py-2.5 pl-10 pr-4 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-borda bg-fundo-sec py-2.5 pl-10 pr-4 text-sm text-texto placeholder:text-texto-off focus:border-primaria focus:outline-none focus:ring-1 focus:ring-primaria"
           />
         </div>
       </div>
 
       {estado && !estado.sucesso && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-red-500">
           {estado.mensagem}
         </p>
       )}
@@ -86,20 +85,10 @@ export function FormularioEntrar() {
       <button
         type="submit"
         disabled={carregando}
-        className="mt-2 w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-2 w-full rounded-lg bg-primaria py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primaria-escuro focus:outline-none focus:ring-2 focus:ring-primaria focus:ring-offset-2 focus:ring-offset-fundo disabled:cursor-not-allowed disabled:opacity-60"
       >
         {carregando ? "Entrando..." : "Entrar"}
       </button>
-
-      <p className="text-center text-sm text-zinc-400">
-        Não tem uma conta?{" "}
-        <Link
-          href="/cadastro"
-          className="font-medium text-blue-400 hover:text-blue-300"
-        >
-          Cadastre-se
-        </Link>
-      </p>
     </form>
   );
 }

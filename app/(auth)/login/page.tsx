@@ -6,9 +6,9 @@ export const metadata = {
 
 export default function PaginaLogin() {
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-900 p-8 shadow-xl">
+    <div className="w-full max-w-sm md:rounded-2xl md:border md:border-borda md:bg-card md:p-8 md:shadow-sm">
       <div className="mb-8 flex flex-col items-center gap-2">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primaria text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -25,8 +25,8 @@ export default function PaginaLogin() {
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
           </svg>
         </div>
-        <h1 className="text-xl font-bold text-zinc-100">Bem-vindo de volta</h1>
-        <p className="text-sm text-zinc-400">Entre na sua conta Financy</p>
+        <h1 className="text-xl font-bold text-texto">Bem-vindo de volta</h1>
+        <p className="text-sm text-texto-sec">Entre na sua conta Financy</p>
       </div>
 
       <FormularioEntrar />

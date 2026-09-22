@@ -1,0 +1,1 @@
+export { clientePrisma } from "./cliente";

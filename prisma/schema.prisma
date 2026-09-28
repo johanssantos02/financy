@@ -14,15 +14,45 @@ enum UserRole {
   @@map("user_roles")
 }
 
+enum MembroFuncao {
+  PROPRIETARIO @map("owner")
+  MEMBRO       @map("member")
+
+  @@map("member_roles")
+}
+
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String
-  email        String   @unique
-  phone        String?
-  passwordHash String   @map("password_hash")
-  role         UserRole @default(USER)
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id            String               @id @default(uuid()) @db.Uuid
+  name          String
+  email         String               @unique
+  phone         String?
+  passwordHash  String               @map("password_hash")
+  role          UserRole             @default(USER)
+  contasFamilia ContaFamiliaMembro[]
+  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("users")
+}
+
+model ContaFamilia {
+  id           String               @id @default(uuid()) @db.Uuid
+  nome         String
+  membros      ContaFamiliaMembro[]
+  criadoEm     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  atualizadoEm DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("family_accounts")
+}
+
+model ContaFamiliaMembro {
+  usuario        User         @relation(fields: [usuarioId], references: [id])
+  usuarioId      String       @map("user_id") @db.Uuid
+  contaFamilia   ContaFamilia @relation(fields: [contaFamiliaId], references: [id])
+  contaFamiliaId String       @map("family_account_id") @db.Uuid
+  funcao         MembroFuncao @default(MEMBRO) @map("role")
+  entradoEm      DateTime     @default(now()) @map("joined_at") @db.Timestamptz(3)
+
+  @@id([usuarioId, contaFamiliaId])
+  @@map("user_family_accounts")
 }

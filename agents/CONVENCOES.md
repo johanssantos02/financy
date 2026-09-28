@@ -25,6 +25,13 @@
 - Representar resultados esperados de mutações com tipos discriminados.
 - Exceções ficam reservadas para falhas inesperadas ou APIs que já trabalham dessa forma.
 
+## Estilização e responsividade
+
+- O design segue a abordagem **mobile-first**: estilos base se aplicam ao menor viewport e breakpoints maiores sobrescrevem conforme necessário.
+- Usar os prefixos de breakpoint do Tailwind em ordem crescente: sem prefixo (base/mobile) → `sm:` → `md:` → `lg:` → `xl:` → `2xl:`.
+- Evitar media queries manuais; preferir as utilitárias responsivas do Tailwind (`flex-col md:flex-row`, `text-sm lg:text-base`, etc.).
+- Layouts e espaçamentos são definidos primeiro para telas pequenas e expandidos para telas maiores, nunca ao contrário.
+
 ## Next.js e React
 
 - Componentes são funções.

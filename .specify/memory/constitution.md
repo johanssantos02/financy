@@ -1,8 +1,9 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Mudança de versão:   1.0.0 → 1.0.1
-Princípios modificados: todos (tradução integral para português)
+Mudança de versão:   1.0.1 → 1.1.0
+Princípios modificados: IV. Isolamento de dados e segurança — registros financeiros podem pertencer
+                        a uma conta família; `contaFamiliaId` também é obtido apenas no servidor
 Seções adicionadas:  nenhuma
 Seções removidas:    nenhuma
 TODOs pendentes:     nenhum
@@ -45,8 +46,10 @@ visíveis em tempo de compilação.
 
 ### IV. Isolamento de dados e segurança
 
-Todo registro financeiro pertence a um único usuário. O `usuarioId` DEVE ser obtido da sessão no
-servidor; recebê-lo como entrada do cliente é proibido. Consultas DEVEM selecionar apenas os campos
+Todo registro financeiro pertence a um único usuário ou a uma única conta família. O `usuarioId` e o
+`contaFamiliaId` DEVEM ser obtidos no servidor a partir da sessão; recebê-los como entrada do cliente
+é proibido. Registros de uma conta família só podem ser acessados por seus membros, e toda consulta
+DEVE filtrar pelo dono do registro. Consultas DEVEM selecionar apenas os campos
 necessários para o chamador. Valores monetários DEVEM usar `Decimal` no banco de dados — aritmética
 de ponto flutuante para dados financeiros é proibida. Segredos DEVEM residir em variáveis de
 ambiente e NÃO DEVEM ser versionados.
@@ -122,4 +125,4 @@ Política de versionamento de alterações:
 
 Todos os pull requests e revisões de código DEVEM verificar conformidade com os princípios acima.
 
-**Versão**: 1.0.1 | **Ratificada**: 2026-09-28 | **Última alteração**: 2026-09-28
+**Versão**: 1.1.0 | **Ratificada**: 2026-09-28 | **Última alteração**: 2026-09-30

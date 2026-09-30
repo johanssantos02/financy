@@ -66,11 +66,17 @@ npm run db:migrar
 
 Copie `.env.example` para `.env` e substitua os dados pelas conexões exibidas em **Connect** no projeto do Supabase. `DATABASE_URL` usa o pool transacional; `DIRECT_URL` usa a conexão direta.
 
+## Decisões vigentes
+
+- recorrência de despesas calculada por competência, persistindo apenas pagamentos;
+- despesas compartilhadas por conta família;
+- fuso horário de referência: America/Sao_Paulo;
+- notificações ao usuário com `react-hot-toast`.
+
 ## Decisões pendentes
 
 - provedor inicial do Auth.js;
-- regras de geração e alteração de recorrências;
-- moeda, fuso horário e critérios dos relatórios;
+- moeda e critérios dos relatórios;
 - estratégia e ferramentas de testes.
 
 ## Documentação

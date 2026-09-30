@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Home, CreditCard, Heart, Settings } from "lucide-react";
+import { Home, Wallet, Heart, Settings } from "lucide-react";
 import type { ReactNode } from "react";
 import BotaoAcao from "./BotaoAcao";
 import MenuAcoes from "./MenuAcoes";
@@ -16,7 +16,7 @@ type ItemNavegacao = {
 
 const itens: ItemNavegacao[] = [
   { rotulo: "Início", rota: "/", icone: <Home size={24} strokeWidth={1.75} /> },
-  { rotulo: "Dívidas", rota: "/dividas", icone: <CreditCard size={24} strokeWidth={1.75} /> },
+  { rotulo: "Despesas", rota: "/despesas", icone: <Wallet size={24} strokeWidth={1.75} /> },
   { rotulo: "Lista de desejos", rota: "/lista-de-desejos", icone: <Heart size={24} strokeWidth={1.75} /> },
   { rotulo: "Configurações", rota: "/configuracoes", icone: <Settings size={24} strokeWidth={1.75} /> },
 ];
@@ -27,7 +27,7 @@ function estaAtivo(rota: string, pathname: string): boolean {
 }
 
 export default function NavbarRodape() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const botaoRef = useRef<HTMLButtonElement>(null);

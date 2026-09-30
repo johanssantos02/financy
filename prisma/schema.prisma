@@ -22,15 +22,17 @@ enum MembroFuncao {
 }
 
 model User {
-  id            String               @id @default(uuid()) @db.Uuid
-  name          String
-  email         String               @unique
-  phone         String?
-  passwordHash  String               @map("password_hash")
-  role          UserRole             @default(USER)
-  contasFamilia ContaFamiliaMembro[]
-  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt     DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id                String               @id @default(uuid()) @db.Uuid
+  name              String
+  email             String               @unique
+  phone             String?
+  passwordHash      String               @map("password_hash")
+  role              UserRole             @default(USER)
+  contasFamilia     ContaFamiliaMembro[]
+  despesasCriadas   Despesa[]            @relation("DespesaCriadaPor")
+  pagamentosDespesa PagamentoDespesa[]   @relation("PagamentoDespesaPagoPor")
+  createdAt         DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("users")
 }
@@ -39,6 +41,8 @@ model ContaFamilia {
   id           String               @id @default(uuid()) @db.Uuid
   nome         String
   membros      ContaFamiliaMembro[]
+  despesas     Despesa[]
+  tags         Tag[]
   criadoEm     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
   atualizadoEm DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -55,4 +59,64 @@ model ContaFamiliaMembro {
 
   @@id([usuarioId, contaFamiliaId])
   @@map("user_family_accounts")
+}
+
+model Despesa {
+  id              String             @id @default(uuid()) @db.Uuid
+  contaFamilia    ContaFamilia       @relation(fields: [contaFamiliaId], references: [id])
+  contaFamiliaId  String             @map("family_account_id") @db.Uuid
+  nome            String             @map("name")
+  nomeNormalizado String?            @map("normalized_name")
+  valor           Decimal            @map("amount") @db.Decimal(12, 2)
+  vencimento      DateTime           @map("due_date") @db.Date
+  lancamento      DateTime           @map("entry_date") @db.Date
+  recorrente      Boolean            @default(false) @map("recurring")
+  descricao       String?            @map("description")
+  criadoPor       User               @relation("DespesaCriadaPor", fields: [criadoPorId], references: [id])
+  criadoPorId     String             @map("created_by") @db.Uuid
+  pagamentos      PagamentoDespesa[]
+  tags            DespesaTag[]
+  criadoEm        DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  atualizadoEm    DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  excluidoEm      DateTime?          @map("deleted_at") @db.Timestamptz(3)
+
+  @@unique([contaFamiliaId, nomeNormalizado])
+  @@index([contaFamiliaId, vencimento])
+  @@map("expenses")
+}
+
+model PagamentoDespesa {
+  id          String   @id @default(uuid()) @db.Uuid
+  despesa     Despesa  @relation(fields: [despesaId], references: [id], onDelete: Cascade)
+  despesaId   String   @map("expense_id") @db.Uuid
+  competencia DateTime @map("reference_month") @db.Date
+  pagoPor     User     @relation("PagamentoDespesaPagoPor", fields: [pagoPorId], references: [id])
+  pagoPorId   String   @map("paid_by") @db.Uuid
+  pagoEm      DateTime @default(now()) @map("paid_at") @db.Timestamptz(3)
+
+  @@unique([despesaId, competencia])
+  @@map("expense_payments")
+}
+
+model Tag {
+  id              String       @id @default(uuid()) @db.Uuid
+  contaFamilia    ContaFamilia @relation(fields: [contaFamiliaId], references: [id])
+  contaFamiliaId  String       @map("family_account_id") @db.Uuid
+  nome            String       @map("name")
+  nomeNormalizado String       @map("normalized_name")
+  despesas        DespesaTag[]
+  criadoEm        DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@unique([contaFamiliaId, nomeNormalizado])
+  @@map("tags")
+}
+
+model DespesaTag {
+  despesa   Despesa @relation(fields: [despesaId], references: [id], onDelete: Cascade)
+  despesaId String  @map("expense_id") @db.Uuid
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId     String  @map("tag_id") @db.Uuid
+
+  @@id([despesaId, tagId])
+  @@map("expense_tags")
 }

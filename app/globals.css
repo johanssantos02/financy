@@ -11,6 +11,8 @@
   --primaria: #16a34a;
   --primaria-hover: #15803d;
   --primaria-bg: #f0fdf4;
+  --perigo: #dc2626;
+  --perigo-bg: #fef2f2;
 }
 
 @theme inline {
@@ -24,6 +26,8 @@
   --color-primaria: var(--primaria);
   --color-primaria-escuro: var(--primaria-hover);
   --color-primaria-claro: var(--primaria-bg);
+  --color-perigo: var(--perigo);
+  --color-perigo-claro: var(--perigo-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

@@ -11,9 +11,11 @@ type ItemAcao = {
   icone: ReactNode;
 };
 
+const ROTA_NOVA_DESPESA = "/despesas/nova";
+
 const opcoes: ItemAcao[] = [
   { rotulo: "Nova entrada", rota: "/entradas/nova", icone: <TrendingUp size={20} strokeWidth={1.75} /> },
-  { rotulo: "Nova despesa", rota: "/despesas/nova", icone: <TrendingDown size={20} strokeWidth={1.75} /> },
+  { rotulo: "Nova despesa", rota: ROTA_NOVA_DESPESA, icone: <TrendingDown size={20} strokeWidth={1.75} /> },
   { rotulo: "Nova dívida", rota: "/dividas/nova", icone: <CreditCard size={20} strokeWidth={1.75} /> },
   { rotulo: "Novo desejo", rota: "/lista-de-desejos/novo", icone: <Heart size={20} strokeWidth={1.75} /> },
 ];
@@ -28,9 +30,16 @@ const MenuAcoes = forwardRef<HTMLDivElement, Props>(({ aberto, onFechar }, ref) 
 
   if (!aberto) return null;
 
+  // A tela de nova despesa usa a origem para voltar ao ponto de partida ao cancelar ou salvar.
+  const comOrigem = (rota: string) => {
+    const atual = window.location.pathname + window.location.search;
+    if (rota !== ROTA_NOVA_DESPESA || window.location.pathname === ROTA_NOVA_DESPESA) return rota;
+    return `${rota}?origem=${encodeURIComponent(atual)}`;
+  };
+
   const handleSelect = (rota: string) => {
     onFechar();
-    router.push(rota);
+    router.push(comOrigem(rota));
   };
 
   return (

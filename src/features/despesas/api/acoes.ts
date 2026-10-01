@@ -18,6 +18,7 @@ import {
 } from "@/src/entities/despesa/server";
 import { clientePrisma } from "@/src/shared/api/prisma";
 import { inicioDaCompetencia, paraDataBanco } from "@/src/shared/lib/datas";
+import { lerFormData, type EntradaFormulario } from "@/src/shared/lib/formulario";
 import {
   codigoErroPrisma,
   erroDeValidacao,
@@ -28,35 +29,17 @@ import {
 } from "@/src/shared/lib/resultado";
 import { obterContextoUsuario } from "@/src/shared/lib/sessao";
 
-type Entrada = FormData | Record<string, unknown>;
-
 const ROTA_DESPESAS = "/despesas";
 const MENSAGEM_NAO_ENCONTRADA = "Despesa não encontrada.";
 const MENSAGEM_NOME_EM_USO = "Já existe uma despesa com este nome.";
 
-// Aceita FormData para uso futuro com useActionState; campos vazios viram ausentes.
-const lerEntrada = (entrada: Entrada): Record<string, unknown> => {
-  if (!(entrada instanceof FormData)) return entrada;
-  const dados: Record<string, unknown> = {};
-  for (const chave of new Set(entrada.keys())) {
-    if (chave.startsWith("$ACTION")) continue;
-    const valores = entrada.getAll(chave).filter((v): v is string => typeof v === "string");
-    if (chave === "tags") {
-      dados.tags = valores.filter((v) => v.trim() !== "");
-    } else if (valores[0] !== undefined && valores[0] !== "") {
-      dados[chave] = valores[0];
-    }
-  }
-  return dados;
-};
-
-export async function criarDespesa(entrada: Entrada): Promise<Resultado<{ id: string }>> {
+export async function criarDespesa(entrada: EntradaFormulario): Promise<Resultado<{ id: string }>> {
   try {
     const contexto = await obterContextoUsuario();
     if (!contexto.sucesso) return contexto;
     const { usuarioId, contaFamiliaId } = contexto.dados;
 
-    const validacao = schemaDespesa.safeParse(lerEntrada(entrada));
+    const validacao = schemaDespesa.safeParse(lerFormData(entrada));
     if (!validacao.success) return erroDeValidacao(validacao.error);
     const dados = validacao.data;
 
@@ -91,13 +74,13 @@ export async function criarDespesa(entrada: Entrada): Promise<Resultado<{ id: st
   }
 }
 
-export async function editarDespesa(entrada: Entrada): Promise<Resultado<{ id: string }>> {
+export async function editarDespesa(entrada: EntradaFormulario): Promise<Resultado<{ id: string }>> {
   try {
     const contexto = await obterContextoUsuario();
     if (!contexto.sucesso) return contexto;
     const { contaFamiliaId } = contexto.dados;
 
-    const validacao = schemaEditarDespesa.safeParse(lerEntrada(entrada));
+    const validacao = schemaEditarDespesa.safeParse(lerFormData(entrada));
     if (!validacao.success) return erroDeValidacao(validacao.error);
     const { id, tags, ...dados } = validacao.data;
 
@@ -137,13 +120,13 @@ export async function editarDespesa(entrada: Entrada): Promise<Resultado<{ id: s
   }
 }
 
-export async function excluirDespesa(entrada: Entrada): Promise<Resultado<{ id: string }>> {
+export async function excluirDespesa(entrada: EntradaFormulario): Promise<Resultado<{ id: string }>> {
   try {
     const contexto = await obterContextoUsuario();
     if (!contexto.sucesso) return contexto;
     const { usuarioId, contaFamiliaId } = contexto.dados;
 
-    const validacao = schemaIdDespesa.safeParse(lerEntrada(entrada));
+    const validacao = schemaIdDespesa.safeParse(lerFormData(entrada));
     if (!validacao.success) return erroDeValidacao(validacao.error);
     const { id } = validacao.data;
 
@@ -172,13 +155,13 @@ export async function excluirDespesa(entrada: Entrada): Promise<Resultado<{ id: 
 
 type ResultadoPagamento = Resultado<{ id: string; competencia: string }>;
 
-export async function marcarDespesaComoPaga(entrada: Entrada): Promise<ResultadoPagamento> {
+export async function marcarDespesaComoPaga(entrada: EntradaFormulario): Promise<ResultadoPagamento> {
   try {
     const contexto = await obterContextoUsuario();
     if (!contexto.sucesso) return contexto;
     const { usuarioId, contaFamiliaId } = contexto.dados;
 
-    const validacao = schemaPagamento.safeParse(lerEntrada(entrada));
+    const validacao = schemaPagamento.safeParse(lerFormData(entrada));
     if (!validacao.success) return erroDeValidacao(validacao.error);
     const { id, competencia } = validacao.data;
 
@@ -214,13 +197,13 @@ export async function marcarDespesaComoPaga(entrada: Entrada): Promise<Resultado
 }
 
 // Qualquer membro pode desmarcar, inclusive um pagamento registrado por outro usuário.
-export async function desmarcarPagamentoDespesa(entrada: Entrada): Promise<ResultadoPagamento> {
+export async function desmarcarPagamentoDespesa(entrada: EntradaFormulario): Promise<ResultadoPagamento> {
   try {
     const contexto = await obterContextoUsuario();
     if (!contexto.sucesso) return contexto;
     const { contaFamiliaId } = contexto.dados;
 
-    const validacao = schemaPagamento.safeParse(lerEntrada(entrada));
+    const validacao = schemaPagamento.safeParse(lerFormData(entrada));
     if (!validacao.success) return erroDeValidacao(validacao.error);
     const { id, competencia } = validacao.data;
 
@@ -246,12 +229,12 @@ export async function desmarcarPagamentoDespesa(entrada: Entrada): Promise<Resul
   }
 }
 
-export async function obterDespesa(entrada: Entrada): Promise<Resultado<DetalheDespesa>> {
+export async function obterDespesa(entrada: EntradaFormulario): Promise<Resultado<DetalheDespesa>> {
   try {
     const contexto = await obterContextoUsuario();
     if (!contexto.sucesso) return contexto;
 
-    const validacao = schemaIdDespesa.safeParse(lerEntrada(entrada));
+    const validacao = schemaIdDespesa.safeParse(lerFormData(entrada));
     if (!validacao.success) return erroDeValidacao(validacao.error);
 
     const despesa = await obterDespesaPorId(contexto.dados.contaFamiliaId, validacao.data.id);

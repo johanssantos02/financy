@@ -25,6 +25,15 @@
 - Representar resultados esperados de mutações com tipos discriminados.
 - Exceções ficam reservadas para falhas inesperadas ou APIs que já trabalham dessa forma.
 
+## Formulários
+
+- O formulário valida no cliente com o mesmo schema Zod usado pela Server Action; o servidor valida de novo.
+- `lerFormData` (`src/shared/lib/formulario`) converte `FormData` em objeto nos dois lados, descartando campos vazios.
+- O envio usa `onSubmit` + `useTransition` chamando a Server Action, e não `<form action>`, para preservar os valores digitados quando há erro.
+- Erro de campo: toast com a mensagem, borda `border-perigo`, `aria-invalid` e `aria-describedby` apontando para a mensagem sob o campo, e foco no primeiro campo inválido na ordem do formulário. Editar o campo remove o erro dele.
+- O botão de envio fica desabilitado enquanto envia e após o sucesso, evitando registros duplicados.
+- Telas de criação abertas pelo menu de criação recebem `?origem=<caminho interno>`, validado com `obterCaminhoInterno`. Cancelar ou salvar volta com `router.back()` quando há origem e histórico; caso contrário, `router.replace` para a origem ou para a listagem.
+
 ## Estilização e responsividade
 
 - O design segue a abordagem **mobile-first**: estilos base se aplicam ao menor viewport e breakpoints maiores sobrescrevem conforme necessário.

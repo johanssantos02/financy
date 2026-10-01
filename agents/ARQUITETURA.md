@@ -41,6 +41,7 @@ A pasta `pages/` na raiz existe apenas para que o Next.js não interprete `src/p
 - Tipos de erro: `VALIDACAO` 400, `NAO_AUTENTICADO` 401, `SEM_PERMISSAO` 403, `NAO_ENCONTRADO` 404, `CONFLITO` 409, `ERRO_INTERNO` 500. `tratarErro` converte exceções sem expor detalhes internos.
 - Mensagens ao usuário usam toasts (`react-hot-toast`) via `src/shared/ui/notificacoes`.
 - Listagens com busca e filtros usam parâmetros de URL lidos no servidor e `next/form`, sem estado duplicado no cliente.
+- Telas de cadastro (ex.: `/despesas/nova` → `pages/nova-despesa` → `features/despesas`) usam um Client Component de formulário que chama a Server Action; ver "Formulários" em `CONVENCOES.md`.
 
 ## Dados
 

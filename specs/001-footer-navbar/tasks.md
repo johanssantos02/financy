@@ -45,11 +45,11 @@ das páginas não fique oculto atrás dele.
 **Objetivo**: navbar visível com 5 slots, itens de rota com ícones, estado ativo baseado na rota
 atual e navegação funcional entre as quatro seções principais.
 
-**Teste independente**: navegar entre `/`, `/dividas`, `/lista-de-desejos` e `/configuracoes`
+**Teste independente**: navegar entre `/`, `/gastos`, `/lista-de-desejos` e `/configuracoes`
 confirmando que o item correto fica na cor primária e que a navegação ocorre ao tocar nos ícones.
 
 - [x] T005 [US1] Implementar estrutura visual de `src/widgets/navbar-rodape/ui/NavbarRodape.tsx`: `position: fixed; bottom: 0; left: 0; right: 0`, largura 100% sem `max-width`, altura interna `h-16` (64px), `bg-card`, `border-t border-borda`, `z-50`, sem overflow horizontal — 5 slots com `grid grid-cols-5` ou `flex` com `flex-1` em cada slot
-- [x] T006 [P] [US1] Adicionar tipos `ItemNavegacao` e array de configuração dos 4 itens de rota em `src/widgets/navbar-rodape/ui/NavbarRodape.tsx`: `{ rotulo, rota, icone }` para Início (`/`), Dívidas (`/dividas`), Lista de desejos (`/lista-de-desejos`) e Configurações (`/configuracoes`) com ícones `lucide-react`
+- [x] T006 [P] [US1] Adicionar tipos `ItemNavegacao` e array de configuração dos 4 itens de rota em `src/widgets/navbar-rodape/ui/NavbarRodape.tsx`: `{ rotulo, rota, icone }` para Início (`/`), Gastos (`/gastos`), Lista de desejos (`/lista-de-desejos`) e Configurações (`/configuracoes`) com ícones `lucide-react`
 - [x] T007 [US1] Renderizar os 4 itens de navegação em `src/widgets/navbar-rodape/ui/NavbarRodape.tsx` usando `<Link>` do `next/link` e `usePathname` do `next/navigation` — aplicar `text-primaria` ao item ativo (match exato para `/`; `startsWith` para demais), `text-texto-sec` aos inativos; slot central (posição 3) renderiza `<div className="flex-1" />` como placeholder para US2
 
 **Checkpoint**: US1 completa — navbar fixo com navegação e estado ativo funcionando.

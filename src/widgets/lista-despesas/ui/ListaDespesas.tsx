@@ -5,6 +5,7 @@ import {
   type ListagemDespesas,
 } from "@/src/entities/despesa";
 import { listarDespesas } from "@/src/entities/despesa/server";
+import { OpcoesDespesa } from "@/src/features/despesas";
 import { inicioDaCompetencia, paraDataBanco } from "@/src/shared/lib/datas";
 import { tratarErro, type Resultado } from "@/src/shared/lib/resultado";
 import { obterContextoUsuario } from "@/src/shared/lib/sessao";
@@ -80,7 +81,11 @@ export default async function ListaDespesas({ filtros }: { filtros: FiltrosDespe
             </h2>
             <ul className="flex flex-col gap-3">
               {itens.map((ocorrencia) => (
-                <ItemDespesa key={ocorrencia.despesaId} ocorrencia={ocorrencia} />
+                <ItemDespesa
+                  key={ocorrencia.despesaId}
+                  ocorrencia={ocorrencia}
+                  acoes={<OpcoesDespesa nome={ocorrencia.nome} valor={ocorrencia.valor} />}
+                />
               ))}
             </ul>
           </section>

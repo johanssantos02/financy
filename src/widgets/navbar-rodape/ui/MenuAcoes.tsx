@@ -16,7 +16,7 @@ const ROTA_NOVA_DESPESA = "/despesas/nova";
 const opcoes: ItemAcao[] = [
   { rotulo: "Nova entrada", rota: "/entradas/nova", icone: <TrendingUp size={20} strokeWidth={1.75} /> },
   { rotulo: "Nova despesa", rota: ROTA_NOVA_DESPESA, icone: <TrendingDown size={20} strokeWidth={1.75} /> },
-  { rotulo: "Nova dívida", rota: "/dividas/nova", icone: <CreditCard size={20} strokeWidth={1.75} /> },
+  { rotulo: "Novo gasto", rota: "/gastos/novo", icone: <CreditCard size={20} strokeWidth={1.75} /> },
   { rotulo: "Novo desejo", rota: "/lista-de-desejos/novo", icone: <Heart size={20} strokeWidth={1.75} /> },
 ];
 

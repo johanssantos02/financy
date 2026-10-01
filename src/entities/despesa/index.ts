@@ -21,5 +21,6 @@ export {
   type EntradaEditarDespesa,
   type FiltrosDespesa,
 } from "./model/schemas";
+export { formatarDiaMes, formatarValor, mascararValor, valorDaMascara } from "./lib/formatacao";
 export { default as ItemDespesa } from "./ui/ItemDespesa";
 export { default as SeloSituacao } from "./ui/SeloSituacao";

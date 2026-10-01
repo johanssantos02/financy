@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-import { schemaDespesa } from "@/src/entities/despesa";
+import { mascararValor, schemaDespesa, valorDaMascara } from "@/src/entities/despesa";
 import { lerFormData } from "@/src/shared/lib/formulario";
 import type { ErroAplicacao } from "@/src/shared/lib/resultado";
 
@@ -55,6 +55,7 @@ function MensagemErro({ campo, mensagem }: { campo: Campo; mensagem?: string }) 
 export default function FormularioNovaDespesa({ origem }: { origem: string | null }) {
   const router = useRouter();
   const formulario = useRef<HTMLFormElement>(null);
+  const campoContinuar = useRef<HTMLInputElement>(null);
   const [erros, setErros] = useState<ErrosPorCampo>({});
   const [enviando, iniciarEnvio] = useTransition();
   const [concluido, setConcluido] = useState(false);
@@ -86,6 +87,7 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
     evento.preventDefault();
     if (bloqueado) return;
     const dados = new FormData(evento.currentTarget);
+    dados.set("valor", valorDaMascara(String(dados.get("valor") ?? "")));
 
     const validacao = schemaDespesa.safeParse(lerFormData(dados));
     if (!validacao.success) {
@@ -100,6 +102,7 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
         toast.success("Despesa cadastrada.");
         if (continuarAdicionando) {
           formulario.current?.reset();
+          if (campoContinuar.current) campoContinuar.current.checked = true;
           setErros({});
           const nome = formulario.current?.elements.namedItem("nome");
           if (nome instanceof HTMLElement) nome.focus();
@@ -181,9 +184,12 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
               id="valor"
               name="valor"
               type="text"
-              inputMode="decimal"
+              inputMode="numeric"
               autoComplete="off"
-              placeholder="0,00"
+              placeholder="R$ 0,00"
+              onChange={(evento) => {
+                evento.target.value = mascararValor(evento.target.value);
+              }}
               className={`h-11 ${classeCampo(Boolean(erros.valor))}`}
               {...propsAcessibilidade("valor")}
             />
@@ -194,6 +200,19 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
         <label className="flex min-h-11 items-center gap-3 text-sm text-texto">
           <input type="checkbox" name="recorrente" className="h-5 w-5 accent-primaria" />
           Despesa recorrente
+        </label>
+
+        {/* Sem `name` para não ser enviado; o estado é restaurado após o reset do cadastro. */}
+        <label className="flex min-h-11 items-center gap-3 text-sm text-texto">
+          <input
+            ref={campoContinuar}
+            type="checkbox"
+            checked={continuarAdicionando}
+            onChange={(evento) => setContinuarAdicionando(evento.target.checked)}
+            disabled={bloqueado}
+            className="h-5 w-5 accent-primaria"
+          />
+          Continuar adicionando despesas
         </label>
 
         <div className="flex gap-3">
@@ -214,18 +233,6 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
           </button>
         </div>
       </form>
-
-      {/* Fora do formulário para não ser enviado nem desmarcado pelo reset após o cadastro. */}
-      <label className="flex min-h-11 items-center gap-3 text-sm text-texto">
-        <input
-          type="checkbox"
-          checked={continuarAdicionando}
-          onChange={(evento) => setContinuarAdicionando(evento.target.checked)}
-          disabled={bloqueado}
-          className="h-5 w-5 accent-primaria"
-        />
-        Continuar adicionando despesas
-      </label>
     </div>
   );
 }

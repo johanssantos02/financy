@@ -1,8 +1,8 @@
 import type { SituacaoDespesa } from "../model/tipos";
 
 const estilos: Record<SituacaoDespesa, string> = {
-  ABERTA: "bg-fundo-sec text-texto-sec",
-  VENCIMENTO_PROXIMO: "bg-fundo-sec text-texto",
+  ABERTA: "bg-info-claro text-info",
+  VENCIMENTO_PROXIMO: "bg-alerta-claro text-alerta",
   VENCIDA: "bg-perigo-claro text-perigo",
   PAGA: "bg-primaria-claro text-primaria",
 };

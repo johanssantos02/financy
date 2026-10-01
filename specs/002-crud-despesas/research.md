@@ -148,7 +148,7 @@ listagem retorna erro. Para as ações futuras, `notificarResultado(resultado, m
 ## R10. Navbar (FR-015)
 
 **Decision**: em `NavbarRodape.tsx`, `itens[1]` passa a `{ rotulo: "Despesas", rota: "/despesas",
-icone: <Wallet/> }` (lucide). O `CreditCard` continua representando "Nova dívida" no menu.
+icone: <Wallet/> }` (lucide). O `CreditCard` continua representando "Novo gasto" no menu.
 
 ---
 

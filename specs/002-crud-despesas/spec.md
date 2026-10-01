@@ -207,7 +207,7 @@ o resultado e a estrutura de erro retornada.
 **Listagem e interface**
 
 - **FR-015**: O segundo ícone do navbar inferior DEVE levar à tela de despesas, com rótulo acessível
-  "Despesas", substituindo o destino atual "Dívidas".
+  "Despesas", substituindo o destino atual "Gastos".
 - **FR-016**: A tela DEVE obter os dados já prontos do servidor na renderização, sem busca inicial
   disparada pelo navegador.
 - **FR-017**: A ordenação inicial DEVE ser pelo vencimento mais próximo (crescente) dentro de cada
@@ -266,7 +266,7 @@ o resultado e a estrutura de erro retornada.
 
 ## Assumptions
 
-- O "segundo ícone" do navbar hoje aponta para "Dívidas"; ele passa a representar "Despesas". Dívidas
+- O "segundo ícone" do navbar hoje aponta para "Gastos"; ele passa a representar "Despesas". Gastos
   continuarão acessíveis pelo menu de criação e terão entrada própria definida em outra entrega.
 - O usuário autenticado pertence a uma conta família; se pertencer a mais de uma, é usada a primeira
   em que ingressou até existir seleção de conta. Usuário sem conta família vê a lista vazia e não

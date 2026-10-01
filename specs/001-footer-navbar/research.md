@@ -73,9 +73,9 @@ rotas.
 
 **Regras de matching para estado ativo**:
 - Início (`/`): comparação exata `pathname === '/'`
-- Demais rotas: `pathname.startsWith('/dividas')`, `pathname.startsWith('/lista-de-desejos')`,
+- Demais rotas: `pathname.startsWith('/gastos')`, `pathname.startsWith('/lista-de-desejos')`,
   `pathname.startsWith('/configuracoes')`
-- O `startsWith` garante que subrotas (ex: `/dividas/nova`) também ativam o item correto.
+- O `startsWith` garante que subrotas (ex: `/gastos/novo`) também ativam o item correto.
 - Páginas de criação (`/entradas/nova`, etc.) não correspondem a nenhuma rota de navegação →
   nenhum item ativo, conforme esperado.
 
@@ -97,13 +97,13 @@ sem impacto no bundle de páginas que não usam o componente.
 | Item | Ícone lucide-react |
 |------|--------------------|
 | Início | `House` |
-| Dívidas | `CreditCard` |
+| Gastos | `CreditCard` |
 | Botão + / × | `Plus` / `X` |
 | Lista de desejos | `Heart` |
 | Configurações | `Settings` |
 | Nova entrada | `TrendingUp` |
 | Nova despesa | `TrendingDown` |
-| Nova dívida | `CreditCard` |
+| Novo gasto | `CreditCard` |
 | Novo desejo | `Heart` |
 
 **Alternatives considered**:

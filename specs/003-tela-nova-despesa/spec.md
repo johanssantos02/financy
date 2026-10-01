@@ -205,4 +205,4 @@ principal está no cadastro em si.
   despesa pode ter vencido antes de ser registrada.
 - As notificações usam o componente de toast e as mensagens padronizadas já existentes no aplicativo.
 - Fora de escopo: edição, exclusão, marcação de pagamento pela interface, gestão de tags e outras opções
-  do menu de criação (nova entrada, nova dívida, novo desejo).
+  do menu de criação (nova entrada, novo gasto, novo desejo).

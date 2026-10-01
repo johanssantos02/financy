@@ -26,7 +26,7 @@ Ambos devem passar sem erros antes de considerar a feature completa.
 
 1. Abrir qualquer página autenticada.
 2. Inspecionar o DOM do navbar.
-3. **Esperado**: cinco elementos filhos na ordem Início, Dívidas, botão central, Lista de desejos,
+3. **Esperado**: cinco elementos filhos na ordem Início, Gastos, botão central, Lista de desejos,
    Configurações.
 
 ### AC-02 — Largura total sem overflow
@@ -42,7 +42,7 @@ Navegar para cada rota e confirmar o item ativo correspondente:
 | URL | Item esperado como ativo |
 |-----|--------------------------|
 | `/` | Início |
-| `/dividas` | Dívidas |
+| `/gastos` | Gastos |
 | `/lista-de-desejos` | Lista de desejos |
 | `/configuracoes` | Configurações |
 | `/entradas/nova` | Nenhum |
@@ -52,8 +52,8 @@ O item ativo deve apresentar a cor `--color-primaria` (#16a34a). Os demais devem
 
 ### AC-04 e AC-05 — Navegação e item já ativo
 
-1. Estando em `/`, tocar em "Dívidas" → deve navegar para `/dividas`.
-2. Estando em `/dividas`, tocar em "Dívidas" novamente → nenhuma navegação deve ocorrer.
+1. Estando em `/`, tocar em "Gastos" → deve navegar para `/gastos`.
+2. Estando em `/gastos`, tocar em "Gastos" novamente → nenhuma navegação deve ocorrer.
 
 ### AC-06 e AC-07 — Abrir e fechar menu pelo botão
 
@@ -70,7 +70,7 @@ O item ativo deve apresentar a cor `--color-primaria` (#16a34a). Os demais devem
 
 1. Abrir o menu.
 2. Tocar em "Nova entrada" → menu fecha; navega para `/entradas/nova`.
-3. Repetir para "Nova despesa" (`/despesas/nova`), "Nova dívida" (`/dividas/nova`),
+3. Repetir para "Nova despesa" (`/despesas/nova`), "Novo gasto" (`/gastos/novo`),
    "Novo desejo" (`/lista-de-desejos/novo`).
 
 ### AC-13 — Navbar fixo durante scroll

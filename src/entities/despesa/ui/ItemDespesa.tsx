@@ -1,22 +1,23 @@
 import { Repeat } from "lucide-react";
+import type { ReactNode } from "react";
 
+import { formatarDiaMes, formatarValor } from "../lib/formatacao";
 import type { OcorrenciaDespesa } from "../model/tipos";
 import SeloSituacao from "./SeloSituacao";
 
-const formatadorMoeda = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+type Props = {
+  ocorrencia: OcorrenciaDespesa;
+  // Camada interativa (ex.: botão que abre as opções) sobreposta ao card.
+  acoes?: ReactNode;
+};
 
-// O valor chega como decimal serializado; Number só é usado na formatação da exibição.
-const formatarValor = (valor: string) => formatadorMoeda.format(Number(valor));
-
-const formatarDiaMes = (data: string) => `${data.slice(8, 10)}/${data.slice(5, 7)}`;
-
-export default function ItemDespesa({ ocorrencia }: { ocorrencia: OcorrenciaDespesa }) {
+export default function ItemDespesa({ ocorrencia, acoes }: Props) {
   const vencida = ocorrencia.situacao === "VENCIDA";
   const paga = ocorrencia.situacao === "PAGA";
 
   return (
     <li
-      className={`flex flex-col gap-2 rounded-xl border bg-card p-4 ${
+      className={`relative flex flex-col gap-2 rounded-xl border bg-card p-4 shadow-sm ${
         vencida ? "border-perigo/30" : "border-borda"
       } ${paga ? "opacity-60" : ""}`}
     >
@@ -61,6 +62,8 @@ export default function ItemDespesa({ ocorrencia }: { ocorrencia: OcorrenciaDesp
           ))}
         </ul>
       )}
+
+      {acoes}
     </li>
   );
 }

@@ -7,3 +7,4 @@ export {
   obterDespesa,
 } from "./api/acoes";
 export { default as FormularioNovaDespesa } from "./ui/FormularioNovaDespesa";
+export { default as OpcoesDespesa } from "./ui/OpcoesDespesa";

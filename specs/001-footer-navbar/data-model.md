@@ -36,7 +36,7 @@ type ItemNavegacao = {
 | `rotulo` | `rota` | Matching de ativo |
 |----------|--------|-------------------|
 | `"Início"` | `"/"` | `pathname === "/"` |
-| `"Dívidas"` | `"/dividas"` | `pathname.startsWith("/dividas")` |
+| `"Gastos"` | `"/gastos"` | `pathname.startsWith("/gastos")` |
 | `"Lista de desejos"` | `"/lista-de-desejos"` | `pathname.startsWith("/lista-de-desejos")` |
 | `"Configurações"` | `"/configuracoes"` | `pathname.startsWith("/configuracoes")` |
 
@@ -58,7 +58,7 @@ type ItemAcao = {
 |----------|--------|
 | `"Nova entrada"` | `"/entradas/nova"` |
 | `"Nova despesa"` | `"/despesas/nova"` |
-| `"Nova dívida"` | `"/dividas/nova"` |
+| `"Novo gasto"` | `"/gastos/novo"` |
 | `"Novo desejo"` | `"/lista-de-desejos/novo"` |
 
 ---

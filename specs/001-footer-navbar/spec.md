@@ -17,25 +17,25 @@ item tocado fica destacado visualmente para indicar a seção ativa.
 **Why this priority**: É o comportamento fundamental do componente. Sem navegação funcional com
 estado ativo, as demais histórias não fazem sentido.
 
-**Independent Test**: Pode ser testado completamente ao navegar entre /, /dividas, /lista-de-desejos
+**Independent Test**: Pode ser testado completamente ao navegar entre /, /gastos, /lista-de-desejos
 e /configuracoes e verificar que o item correto fica ativo em cada rota.
 
 **Acceptance Scenarios**:
 
-1. **Dado** que o usuário está em qualquer página, **Quando** tocar no item "Dívidas", **Então** deve
-   ser navegado para /dividas e o item "Dívidas" deve apresentar estado ativo.
-2. **Dado** que o usuário está em /dividas, **Quando** o navbar for renderizado, **Então** o item
-   "Dívidas" deve estar ativo e os demais inativos.
+1. **Dado** que o usuário está em qualquer página, **Quando** tocar no item "Gastos", **Então** deve
+   ser navegado para /gastos e o item "Gastos" deve apresentar estado ativo.
+2. **Dado** que o usuário está em /gastos, **Quando** o navbar for renderizado, **Então** o item
+   "Gastos" deve estar ativo e os demais inativos.
 3. **Dado** que o usuário está na página correspondente a um item, **Quando** tocar nesse mesmo item,
    **Então** nenhuma navegação ou ação adicional deve ocorrer.
 4. **Dado** qualquer viewport mobile, **Quando** o navbar for renderizado, **Então** deve existir
-   exatamente cinco posições na ordem: Início, Dívidas, Adicionar, Lista de desejos, Configurações.
+   exatamente cinco posições na ordem: Início, Gastos, Adicionar, Lista de desejos, Configurações.
 
 ---
 
 ### User Story 2 - Criar um novo registro pelo menu flutuante (Priority: P2)
 
-O usuário quer registrar uma nova entrada, despesa, dívida ou desejo. Ele toca no botão central
+O usuário quer registrar uma nova entrada, despesa, gasto ou desejo. Ele toca no botão central
 circular do navbar, que exibe um menu flutuante com as quatro opções de criação. Ao selecionar uma
 opção, é direcionado para a página de criação correspondente.
 
@@ -55,8 +55,8 @@ opções e verificar que o usuário chega na rota correta com o menu fechado.
    menu deve ser fechado e o usuário deve ser navegado para /entradas/nova.
 4. **Dado** que o menu esteja aberto, **Quando** o usuário selecionar "Nova despesa", **Então** o
    menu deve ser fechado e o usuário deve ser navegado para /despesas/nova.
-5. **Dado** que o menu esteja aberto, **Quando** o usuário selecionar "Nova dívida", **Então** o
-   menu deve ser fechado e o usuário deve ser navegado para /dividas/nova.
+5. **Dado** que o menu esteja aberto, **Quando** o usuário selecionar "Novo gasto", **Então** o
+   menu deve ser fechado e o usuário deve ser navegado para /gastos/novo.
 6. **Dado** que o menu esteja aberto, **Quando** o usuário selecionar "Novo desejo", **Então** o
    menu deve ser fechado e o usuário deve ser navegado para /lista-de-desejos/novo.
 7. **Dado** que o menu esteja aberto, **Quando** o usuário tocar fora do menu e fora do botão
@@ -88,7 +88,7 @@ e em dispositivo com safe area para verificar que os ícones não ficam ocultos.
 2. **Dado** um dispositivo com área segura inferior, **Quando** o navbar for renderizado, **Então**
    seu conteúdo não deve ficar sobreposto pela área de gesto do dispositivo.
 3. **Dado** que o usuário esteja em uma página de criação (/entradas/nova, /despesas/nova,
-   /dividas/nova, /lista-de-desejos/novo), **Quando** a página for renderizada, **Então** o navbar
+   /gastos/novo, /lista-de-desejos/novo), **Quando** a página for renderizada, **Então** o navbar
    deve continuar disponível.
 4. **Dado** qualquer viewport mobile, **Quando** o navbar for renderizado, **Então** ele deve ocupar
    100% da largura da viewport sem gerar scroll horizontal.
@@ -108,8 +108,8 @@ e em dispositivo com safe area para verificar que os ícones não ficam ocultos.
 
 ### Functional Requirements
 
-- **FR-001**: O navbar DEVE possuir exatamente cinco posições, na ordem: Início (/), Dívidas
-  (/dividas), Adicionar (ação), Lista de desejos (/lista-de-desejos), Configurações (/configuracoes).
+- **FR-001**: O navbar DEVE possuir exatamente cinco posições, na ordem: Início (/), Gastos
+  (/gastos), Adicionar (ação), Lista de desejos (/lista-de-desejos), Configurações (/configuracoes).
 - **FR-002**: Os quatro itens de navegação DEVEM apresentar somente ícone, sem texto visível.
 - **FR-003**: O navbar DEVE ocupar 100% da largura da viewport sem max-width e sem gerar overflow
   horizontal.
@@ -134,7 +134,7 @@ e em dispositivo com safe area para verificar que os ícones não ficam ocultos.
   animação de entrada ou saída.
 - **FR-013**: Cada opção do menu DEVE possuir ícone, texto e área de interação de no mínimo 48px de
   altura. As quatro opções DEVEM ser: Nova entrada → /entradas/nova; Nova despesa → /despesas/nova;
-  Nova dívida → /dividas/nova; Novo desejo → /lista-de-desejos/novo.
+  Novo gasto → /gastos/novo; Novo desejo → /lista-de-desejos/novo.
 - **FR-014**: Ao selecionar uma opção do menu, o menu DEVE ser fechado e o usuário DEVE ser navegado
   para a rota correspondente.
 - **FR-015**: Tocar fora do menu e fora do botão central DEVE fechar o menu. NÃO DEVE existir overlay
@@ -142,7 +142,7 @@ e em dispositivo com safe area para verificar que os ícones não ficam ocultos.
 - **FR-016**: Se o menu estiver aberto e o usuário selecionar um item de navegação do navbar, o menu
   DEVE ser fechado e a navegação DEVE ser executada.
 - **FR-017**: O navbar DEVE permanecer visível nas páginas de criação (/entradas/nova, /despesas/nova,
-  /dividas/nova, /lista-de-desejos/novo).
+  /gastos/novo, /lista-de-desejos/novo).
 
 ### Key Entities
 
@@ -179,8 +179,8 @@ e em dispositivo com safe area para verificar que os ícones não ficam ocultos.
 - Acessibilidade (ARIA, navegação por teclado, leitores de tela) está fora do escopo desta spec.
 - Os tokens de cor primária e os demais tokens visuais necessários já existem no projeto e serão
   reutilizados sem modificação.
-- As páginas de destino (/entradas/nova, /despesas/nova, /dividas/nova, /lista-de-desejos/novo,
-  /dividas, /lista-de-desejos, /configuracoes) não precisam existir para que o navbar seja
+- As páginas de destino (/entradas/nova, /despesas/nova, /gastos/novo, /lista-de-desejos/novo,
+  /gastos, /lista-de-desejos, /configuracoes) não precisam existir para que o navbar seja
   implementado e validado; a navegação para rotas ainda não implementadas é aceitável durante o
   desenvolvimento desta feature.
 - O sistema de roteamento do projeto já é capaz de fornecer a rota atual para que o estado ativo

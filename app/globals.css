@@ -13,6 +13,10 @@
   --primaria-bg: #f0fdf4;
   --perigo: #dc2626;
   --perigo-bg: #fef2f2;
+  --info: #2563eb;
+  --info-bg: #eff6ff;
+  --alerta: #c2410c;
+  --alerta-bg: #fff7ed;
 }
 
 @theme inline {
@@ -28,6 +32,10 @@
   --color-primaria-claro: var(--primaria-bg);
   --color-perigo: var(--perigo);
   --color-perigo-claro: var(--perigo-bg);
+  --color-info: var(--info);
+  --color-info-claro: var(--info-bg);
+  --color-alerta: var(--alerta);
+  --color-alerta-claro: var(--alerta-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

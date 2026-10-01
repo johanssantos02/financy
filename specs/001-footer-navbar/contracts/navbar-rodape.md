@@ -18,7 +18,7 @@ import { NavbarRodape } from '@/src/widgets/navbar-rodape';
 ```
 
 **Invariantes**:
-- Sempre renderiza cinco slots na ordem: Início, Dívidas, Adicionar, Lista de desejos, Configurações.
+- Sempre renderiza cinco slots na ordem: Início, Gastos, Adicionar, Lista de desejos, Configurações.
 - O estado do menu sempre inicia fechado na montagem.
 - Nunca aceita `userId` ou dados de sessão — não acessa dados do usuário.
 - Não recebe callbacks externos — todas as interações são internamente gerenciadas.
@@ -72,8 +72,8 @@ O menu flutuante DEVE ser fechado nas seguintes situações:
 | Rota atual | Item ativo |
 |------------|-----------|
 | `/` | Início |
-| `/dividas` | Dívidas |
-| `/dividas/nova` | Dívidas |
+| `/gastos` | Gastos |
+| `/gastos/novo` | Gastos |
 | `/lista-de-desejos` | Lista de desejos |
 | `/lista-de-desejos/novo` | Lista de desejos |
 | `/configuracoes` | Configurações |

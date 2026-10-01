@@ -119,7 +119,7 @@ package.json                            # + react-hot-toast, server-only
 acesso a dados em `entities/despesa/api` (`import "server-only"`); mutações em `features/despesas`;
 UI grande em `widgets/lista-despesas`; composição em `pages/despesas`; rota fina em `app`.
 Resultado/erros e datas ficam em `shared` por serem reutilizados pelos próximos módulos
-(entradas, dívidas) — o formato de erro é requisito transversal da spec (FR-013).
+(entradas, gastos) — o formato de erro é requisito transversal da spec (FR-013).
 
 ## Key Decisions (detalhes em [research.md](./research.md))
 
@@ -137,7 +137,7 @@ Resultado/erros e datas ficam em `shared` por serem reutilizados pelos próximos
   com aviso; quickstart orienta criar a associação. Seed fica fora do escopo.
 - **Fuso horário**: colunas `@db.Date` + cálculo por string `AAAA-MM-DD` evitam deslocamento de
   UTC; qualquer conversão via `new Date()` local deve passar por `shared/lib/datas`.
-- **Mudança de navbar**: `/dividas` deixa de ter atalho no navbar até a feature de dívidas.
+- **Mudança de navbar**: `/gastos` deixa de ter atalho no navbar até a feature de gastos.
 
 ## Complexity Tracking
 

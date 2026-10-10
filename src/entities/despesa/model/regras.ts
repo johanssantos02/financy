@@ -4,6 +4,7 @@ import {
   montarData,
   ultimoDiaDoMes,
 } from "@/src/shared/lib/datas";
+import { normalizarNome as _normalizarNome } from "@/src/shared/lib/texto";
 
 import {
   DIAS_VENCIMENTO_PROXIMO,
@@ -16,8 +17,8 @@ import {
   type SituacaoDespesa,
 } from "./tipos";
 
-export const normalizarNome = (nome: string): string =>
-  nome.trim().toLocaleLowerCase("pt-BR");
+// Reexporta de shared para que os consumidores existentes não precisem mudar os imports.
+export const normalizarNome = _normalizarNome;
 
 type DadosVigencia = Pick<DespesaBase, "vencimento" | "recorrente" | "excluidoEm">;
 

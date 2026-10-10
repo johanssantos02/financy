@@ -56,13 +56,22 @@
 - Transações devem proteger operações que precisam ser atômicas.
 - Segredos ficam em variáveis de ambiente e nunca são versionados.
 
+## Testes
+
+O projeto usa **Vitest** com **Testing Library** para testes unitários e de componente.
+
+- Arquivos `*.test.ts` e `*.test.tsx` ficam ao lado do código que testam.
+- Componentes de navegador (Client Components) declaram `// @vitest-environment jsdom` no topo do arquivo.
+- Server Actions e módulos `server-only` são testados no ambiente padrão (`node`) com mocks de `@/src/shared/api/prisma`, `@/src/shared/lib/sessao` e `next/cache`.
+- Server Components assíncronos são verificados manualmente, pois o Testing Library ainda não suporta RSC em testes de unidade.
+- Prioridade: regras de domínio (schemas Zod), autorização (Server Actions) e fluxos CRUD críticos.
+
 ## Qualidade
 
 Antes de concluir uma mudança, executar as verificações disponíveis e adequadas:
 
 ```bash
+npm test
 npm run lint
 npm run build
 ```
-
-Testes devem priorizar regras de domínio, autorização e fluxos CRUD críticos quando a infraestrutura de testes for adicionada.

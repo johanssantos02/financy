@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { Home, Wallet, Heart, Settings } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Home, Wallet, Heart, Menu } from "lucide-react";
 import type { ReactNode } from "react";
 import BotaoAcao from "./BotaoAcao";
 import MenuAcoes from "./MenuAcoes";
+import SidebarMenu from "./SidebarMenu";
 
 type ItemNavegacao = {
   rotulo: string;
@@ -18,7 +19,6 @@ const itens: ItemNavegacao[] = [
   { rotulo: "Início", rota: "/", icone: <Home size={24} strokeWidth={1.75} /> },
   { rotulo: "Despesas", rota: "/despesas", icone: <Wallet size={24} strokeWidth={1.75} /> },
   { rotulo: "Lista de desejos", rota: "/lista-de-desejos", icone: <Heart size={24} strokeWidth={1.75} /> },
-  { rotulo: "Configurações", rota: "/configuracoes", icone: <Settings size={24} strokeWidth={1.75} /> },
 ];
 
 function estaAtivo(rota: string, pathname: string): boolean {
@@ -29,6 +29,8 @@ function estaAtivo(rota: string, pathname: string): boolean {
 export default function NavbarRodape() {
   const pathname = usePathname() ?? "";
   const [menuAberto, setMenuAberto] = useState(false);
+  const [sidebarAberta, setSidebarAberta] = useState(false);
+  const fecharSidebar = useCallback(() => setSidebarAberta(false), []);
   const menuRef = useRef<HTMLDivElement>(null);
   const botaoRef = useRef<HTMLButtonElement>(null);
 
@@ -96,17 +98,23 @@ export default function NavbarRodape() {
           {itens[2].icone}
         </Link>
 
-        <Link
-          href={itens[3].rota}
-          onClick={fecharMenu}
-          aria-label={itens[3].rotulo}
+        <button
+          type="button"
+          onClick={() => {
+            fecharMenu();
+            setSidebarAberta(true);
+          }}
+          aria-label="Mais opções"
+          aria-expanded={sidebarAberta}
           className={`flex flex-1 items-center justify-center ${
-            estaAtivo(itens[3].rota, pathname) ? "text-primaria" : "text-texto-sec"
+            sidebarAberta ? "text-primaria" : "text-texto-sec"
           }`}
         >
-          {itens[3].icone}
-        </Link>
+          <Menu size={24} strokeWidth={1.75} />
+        </button>
       </div>
+
+      <SidebarMenu aberto={sidebarAberta} onFechar={fecharSidebar} />
     </nav>
   );
 }

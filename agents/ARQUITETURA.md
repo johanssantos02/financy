@@ -53,6 +53,21 @@ A pasta `pages/` na raiz existe apenas para que o Next.js não interprete `src/p
 - Migrations são criadas, revisadas e versionadas; alterações manuais no banco não são fonte de verdade.
 - Relatórios começam como consultas derivadas, sem duplicar dados antes de existir necessidade comprovada.
 
+## Utilitários compartilhados
+
+- `src/shared/lib/moeda` — `formatarValor`, `mascararValor`, `valorDaMascara`: formatação e máscara de valores monetários, usados por entidades como `despesa` e `cartao`.
+- `src/shared/lib/texto` — `normalizarNome`: normalização de nomes (lowercase + trim), usada para unicidade case-insensitive.
+
+## Telas implementadas
+
+| Rota | Componente de página | Propósito |
+| --- | --- | --- |
+| `/cartoes` | `pages/cartoes` | Listagem dos cartões da conta família |
+| `/cartoes/novo` | `pages/novo-cartao` | Formulário de criação |
+| `/cartoes/[id]/editar` | `pages/editar-cartao` | Formulário de edição |
+| `/despesas` | `pages/despesas` | Listagem das despesas |
+| `/despesas/nova` | `pages/nova-despesa` | Formulário de criação de despesa |
+
 ## Evolução
 
 Adicionar abstrações apenas quando houver uso real. Filas, eventos, cache distribuído, repositórios genéricos e serviços separados ficam fora do início do projeto.

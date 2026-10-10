@@ -58,6 +58,7 @@ Uma camada só pode depender das camadas à sua direita. Exceções devem ser ju
 
 ```bash
 npm run dev
+npm test
 npm run lint
 npm run build
 npm run prisma:validar
@@ -71,13 +72,13 @@ Copie `.env.example` para `.env` e substitua os dados pelas conexões exibidas e
 - recorrência de despesas calculada por competência, persistindo apenas pagamentos;
 - despesas compartilhadas por conta família;
 - fuso horário de referência: America/Sao_Paulo;
-- notificações ao usuário com `react-hot-toast`.
+- notificações ao usuário com `react-hot-toast`;
+- testes unitários e de componente com Vitest + Testing Library (arquivos `*.test.ts[x]` ao lado do código).
 
 ## Decisões pendentes
 
 - provedor inicial do Auth.js;
-- moeda e critérios dos relatórios;
-- estratégia e ferramentas de testes.
+- moeda e critérios dos relatórios.
 
 ## Documentação
 

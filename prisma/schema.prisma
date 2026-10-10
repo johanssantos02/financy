@@ -43,6 +43,7 @@ model ContaFamilia {
   membros      ContaFamiliaMembro[]
   despesas     Despesa[]
   tags         Tag[]
+  cartoes      CartaoCredito[]
   criadoEm     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
   atualizadoEm DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -119,4 +120,22 @@ model DespesaTag {
 
   @@id([despesaId, tagId])
   @@map("expense_tags")
+}
+
+model CartaoCredito {
+  id              String       @id @default(uuid()) @db.Uuid
+  contaFamilia    ContaFamilia @relation(fields: [contaFamiliaId], references: [id], onDelete: Restrict)
+  contaFamiliaId  String       @map("family_account_id") @db.Uuid
+  nome            String       @map("name")
+  nomeNormalizado String       @map("normalized_name")
+  instituicao     String       @map("issuer")
+  limite          Decimal      @map("credit_limit") @db.Decimal(12, 2)
+  diaFechamento   Int          @map("closing_day") @db.SmallInt
+  diaVencimento   Int          @map("due_day") @db.SmallInt
+  cor             String?      @map("color") @db.Char(7)
+  criadoEm        DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  atualizadoEm    DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([contaFamiliaId, nomeNormalizado])
+  @@map("credit_cards")
 }

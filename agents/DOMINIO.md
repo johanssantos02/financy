@@ -32,6 +32,19 @@ Contém nome, valor, vencimento, data de lançamento, indicador de recorrência,
 - Apenas administradores excluem despesas. A exclusão é lógica: libera o nome, preserva pagamentos e
   mantém recorrentes visíveis apenas nas competências anteriores à exclusão.
 
+### Cartão de crédito
+
+Instrumento de pagamento pertencente a uma **conta família**; todos os membros o visualizam.
+Contém nome, instituição financeira, limite total, dia de fechamento e dia de vencimento da fatura.
+
+- Nome, instituição e limite são obrigatórios; limite deve ser maior que zero.
+- Os dias de fechamento e vencimento são inteiros entre 1 e 31.
+- O nome é único dentro da conta família, sem diferenciar maiúsculas/minúsculas e ignorando espaços nas extremidades.
+- Limite usado exibido como R$ 0,00 até que exista vínculo com compras (FR-015).
+- Qualquer membro cadastra e edita cartões; apenas administradores excluem.
+- A exclusão é física; é bloqueada quando houver registros financeiros vinculados ao cartão.
+- Nenhum dado sensível de pagamento é solicitado ou armazenado (número do cartão, CVV, senha bancária).
+
 ### Tag
 
 Rótulo livre de uma conta família para marcar e filtrar despesas; nome único na conta, sem

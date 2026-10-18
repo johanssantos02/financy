@@ -21,6 +21,13 @@ enum MembroFuncao {
   @@map("member_roles")
 }
 
+enum TipoReceita {
+  SALARIO @map("salary")
+  OUTRO   @map("other")
+
+  @@map("income_types")
+}
+
 model User {
   id                String               @id @default(uuid()) @db.Uuid
   name              String
@@ -31,6 +38,7 @@ model User {
   contasFamilia     ContaFamiliaMembro[]
   despesasCriadas   Despesa[]            @relation("DespesaCriadaPor")
   pagamentosDespesa PagamentoDespesa[]   @relation("PagamentoDespesaPagoPor")
+  receitasCriadas   Receita[]            @relation("ReceitaCriadaPor")
   createdAt         DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt         DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -44,6 +52,7 @@ model ContaFamilia {
   despesas     Despesa[]
   tags         Tag[]
   cartoes      CartaoCredito[]
+  receitas     Receita[]
   criadoEm     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
   atualizadoEm DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -120,6 +129,23 @@ model DespesaTag {
 
   @@id([despesaId, tagId])
   @@map("expense_tags")
+}
+
+model Receita {
+  id             String       @id @default(uuid()) @db.Uuid
+  contaFamilia   ContaFamilia @relation(fields: [contaFamiliaId], references: [id], onDelete: Restrict)
+  contaFamiliaId String       @map("family_account_id") @db.Uuid
+  criadoPor      User         @relation("ReceitaCriadaPor", fields: [criadoPorId], references: [id])
+  criadoPorId    String       @map("created_by") @db.Uuid
+  valor          Decimal      @map("amount") @db.Decimal(12, 2)
+  tipo           TipoReceita  @map("type")
+  descricao      String?      @map("description")
+  competencia    DateTime?    @map("reference_month") @db.Date
+  criadoEm       DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  atualizadoEm   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([contaFamiliaId, criadoEm])
+  @@map("incomes")
 }
 
 model CartaoCredito {

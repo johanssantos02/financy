@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import BotaoAcao from "./BotaoAcao";
 import MenuAcoes from "./MenuAcoes";
 import SidebarMenu from "./SidebarMenu";
+import { ModalCriarGasto } from "@/src/features/gastos";
 
 type ItemNavegacao = {
   rotulo: string;
@@ -30,6 +31,9 @@ export default function NavbarRodape() {
   const pathname = usePathname() ?? "";
   const [menuAberto, setMenuAberto] = useState(false);
   const [sidebarAberta, setSidebarAberta] = useState(false);
+  const [modalGastoAberto, setModalGastoAberto] = useState(false);
+  // Incrementado a cada abertura para forçar remontagem do modal com estado fresco.
+  const [gastoOpenKey, setGastoOpenKey] = useState(0);
   const fecharSidebar = useCallback(() => setSidebarAberta(false), []);
   const menuRef = useRef<HTMLDivElement>(null);
   const botaoRef = useRef<HTMLButtonElement>(null);
@@ -79,7 +83,15 @@ export default function NavbarRodape() {
         </Link>
 
         <div className="flex flex-1 items-center justify-center relative">
-          <MenuAcoes aberto={menuAberto} onFechar={fecharMenu} ref={menuRef} />
+          <MenuAcoes
+            aberto={menuAberto}
+            onFechar={fecharMenu}
+            onNovoGasto={() => {
+              setGastoOpenKey((k) => k + 1);
+              setModalGastoAberto(true);
+            }}
+            ref={menuRef}
+          />
           <BotaoAcao
             aberto={menuAberto}
             onToggle={() => setMenuAberto((v) => !v)}
@@ -115,6 +127,12 @@ export default function NavbarRodape() {
       </div>
 
       <SidebarMenu aberto={sidebarAberta} onFechar={fecharSidebar} />
+
+      <ModalCriarGasto
+        key={gastoOpenKey}
+        aberto={modalGastoAberto}
+        onFechar={() => setModalGastoAberto(false)}
+      />
     </nav>
   );
 }

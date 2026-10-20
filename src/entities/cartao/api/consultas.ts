@@ -10,6 +10,7 @@ const selecaoCartao = {
   nome: true,
   instituicao: true,
   limite: true,
+  limiteUsado: true,
   diaFechamento: true,
   diaVencimento: true,
   cor: true,
@@ -22,8 +23,7 @@ const paraResumoCartao = (cartao: CartaoSelecionado): ResumoCartao => ({
   nome: cartao.nome,
   instituicao: cartao.instituicao,
   limite: cartao.limite.toFixed(2),
-  // limiteUsado é sempre "0.00" nesta entrega — será calculado quando existir vínculo com compras (FR-015).
-  limiteUsado: "0.00",
+  limiteUsado: cartao.limiteUsado.toFixed(2),
   diaFechamento: cartao.diaFechamento,
   diaVencimento: cartao.diaVencimento,
   cor: cartao.cor,

@@ -7,25 +7,19 @@ import type { ReactNode } from "react";
 
 type ItemAcao = {
   rotulo: string;
-  rota: string;
   icone: ReactNode;
+  acao: () => void;
 };
 
 const ROTA_NOVA_DESPESA = "/despesas/nova";
 
-const opcoes: ItemAcao[] = [
-  { rotulo: "Nova entrada", rota: "/entradas", icone: <TrendingUp size={20} strokeWidth={1.75} /> },
-  { rotulo: "Nova despesa", rota: ROTA_NOVA_DESPESA, icone: <TrendingDown size={20} strokeWidth={1.75} /> },
-  { rotulo: "Novo gasto", rota: "/gastos/novo", icone: <CreditCard size={20} strokeWidth={1.75} /> },
-  { rotulo: "Novo desejo", rota: "/lista-de-desejos/novo", icone: <Heart size={20} strokeWidth={1.75} /> },
-];
-
 type Props = {
   aberto: boolean;
   onFechar: () => void;
+  onNovoGasto: () => void;
 };
 
-const MenuAcoes = forwardRef<HTMLDivElement, Props>(({ aberto, onFechar }, ref) => {
+const MenuAcoes = forwardRef<HTMLDivElement, Props>(({ aberto, onFechar, onNovoGasto }, ref) => {
   const router = useRouter();
 
   if (!aberto) return null;
@@ -37,10 +31,36 @@ const MenuAcoes = forwardRef<HTMLDivElement, Props>(({ aberto, onFechar }, ref) 
     return `${rota}?origem=${encodeURIComponent(atual)}`;
   };
 
-  const handleSelect = (rota: string) => {
+  const navegar = (rota: string) => {
     onFechar();
     router.push(comOrigem(rota));
   };
+
+  const opcoes: ItemAcao[] = [
+    {
+      rotulo: "Nova entrada",
+      icone: <TrendingUp size={20} strokeWidth={1.75} />,
+      acao: () => navegar("/entradas"),
+    },
+    {
+      rotulo: "Nova despesa",
+      icone: <TrendingDown size={20} strokeWidth={1.75} />,
+      acao: () => navegar(ROTA_NOVA_DESPESA),
+    },
+    {
+      rotulo: "Novo gasto",
+      icone: <CreditCard size={20} strokeWidth={1.75} />,
+      acao: () => {
+        onFechar();
+        onNovoGasto();
+      },
+    },
+    {
+      rotulo: "Novo desejo",
+      icone: <Heart size={20} strokeWidth={1.75} />,
+      acao: () => navegar("/lista-de-desejos/novo"),
+    },
+  ];
 
   return (
     <div
@@ -49,8 +69,8 @@ const MenuAcoes = forwardRef<HTMLDivElement, Props>(({ aberto, onFechar }, ref) 
     >
       {opcoes.map((opcao) => (
         <button
-          key={opcao.rota}
-          onClick={() => handleSelect(opcao.rota)}
+          key={opcao.rotulo}
+          onClick={opcao.acao}
           className="flex items-center gap-3 w-full px-4 text-texto text-sm font-medium min-h-[48px] hover:bg-fundo-sec transition-colors"
         >
           <span className="text-texto-sec">{opcao.icone}</span>

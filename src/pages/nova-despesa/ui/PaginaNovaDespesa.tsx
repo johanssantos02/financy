@@ -11,7 +11,7 @@ export default function PaginaNovaDespesa({ origem }: { origem: string | null })
         </p>
       </header>
       <p className="text-xs text-texto-sec">Campos marcados com * são obrigatórios.</p>
-      <FormularioNovaDespesa origem={origem} />
+      <FormularioNovaDespesa modo="criar" origem={origem} />
     </main>
   );
 }

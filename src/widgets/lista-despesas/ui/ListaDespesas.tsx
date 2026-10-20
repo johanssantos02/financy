@@ -4,7 +4,7 @@ import {
   type GrupoSituacao,
   type ListagemDespesas,
 } from "@/src/entities/despesa";
-import { listarDespesas } from "@/src/entities/despesa/server";
+import { listarDespesas, obterSaldoMes } from "@/src/entities/despesa/server";
 import { OpcoesDespesa } from "@/src/features/despesas";
 import { inicioDaCompetencia, paraDataBanco } from "@/src/shared/lib/datas";
 import { tratarErro, type Resultado } from "@/src/shared/lib/resultado";
@@ -26,21 +26,35 @@ const formatadorMes = new Intl.DateTimeFormat("pt-BR", {
 const formatarCompetencia = (competencia: string) =>
   formatadorMes.format(paraDataBanco(inicioDaCompetencia(competencia)));
 
-async function carregar(filtros: FiltrosDespesa): Promise<Resultado<ListagemDespesas>> {
-  const contexto = await obterContextoUsuario();
-  if (!contexto.sucesso) return contexto;
-  try {
-    return {
-      sucesso: true,
-      dados: await listarDespesas(contexto.dados.contaFamiliaId, filtros),
-    };
-  } catch (erro) {
-    return tratarErro(erro);
-  }
-}
-
 export default async function ListaDespesas({ filtros }: { filtros: FiltrosDespesa }) {
-  const resultado = await carregar(filtros);
+  const contexto = await obterContextoUsuario();
+  if (!contexto.sucesso) {
+    return (
+      <div
+        role="alert"
+        className="rounded-xl border border-perigo/30 bg-perigo-claro p-4 text-sm text-perigo"
+      >
+        {contexto.erro.mensagem}
+        <NotificarErro erro={contexto.erro} />
+      </div>
+    );
+  }
+
+  const { contaFamiliaId, papel } = contexto.dados;
+  const ehAdmin = papel === "ADMIN";
+
+  let resultado: Resultado<ListagemDespesas>;
+  let saldoMes: string;
+
+  try {
+    [resultado, saldoMes] = await Promise.all([
+      listarDespesas(contaFamiliaId, filtros).then((dados) => ({ sucesso: true as const, dados })),
+      obterSaldoMes(contaFamiliaId, filtros.competencia),
+    ]);
+  } catch (erro) {
+    resultado = tratarErro(erro);
+    saldoMes = "0.00";
+  }
 
   if (!resultado.sucesso) {
     return (
@@ -84,7 +98,13 @@ export default async function ListaDespesas({ filtros }: { filtros: FiltrosDespe
                 <ItemDespesa
                   key={ocorrencia.despesaId}
                   ocorrencia={ocorrencia}
-                  acoes={<OpcoesDespesa nome={ocorrencia.nome} valor={ocorrencia.valor} />}
+                  acoes={
+                    <OpcoesDespesa
+                      ocorrencia={ocorrencia}
+                      ehAdmin={ehAdmin}
+                      saldoMes={saldoMes}
+                    />
+                  }
                 />
               ))}
             </ul>

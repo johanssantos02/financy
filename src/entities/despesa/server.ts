@@ -7,3 +7,4 @@ export {
   obterDespesaPorId,
   sincronizarTags,
 } from "./api/consultas";
+export { obterSaldoMes } from "./api/saldo";

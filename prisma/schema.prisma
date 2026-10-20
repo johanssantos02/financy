@@ -28,6 +28,20 @@ enum TipoReceita {
   @@map("income_types")
 }
 
+enum FormaPagamento {
+  DINHEIRO @map("cash")
+  CARTAO   @map("card")
+
+  @@map("payment_methods")
+}
+
+enum TipoTag {
+  GASTOS   @map("spending")
+  DESPESAS @map("expense")
+
+  @@map("tag_types")
+}
+
 model User {
   id                String               @id @default(uuid()) @db.Uuid
   name              String
@@ -39,6 +53,7 @@ model User {
   despesasCriadas   Despesa[]            @relation("DespesaCriadaPor")
   pagamentosDespesa PagamentoDespesa[]   @relation("PagamentoDespesaPagoPor")
   receitasCriadas   Receita[]            @relation("ReceitaCriadaPor")
+  gastosCriados     Gasto[]              @relation("GastoCriadoPor")
   createdAt         DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt         DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -53,6 +68,7 @@ model ContaFamilia {
   tags         Tag[]
   cartoes      CartaoCredito[]
   receitas     Receita[]
+  gastos       Gasto[]
   criadoEm     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
   atualizadoEm DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -114,10 +130,12 @@ model Tag {
   contaFamiliaId  String       @map("family_account_id") @db.Uuid
   nome            String       @map("name")
   nomeNormalizado String       @map("normalized_name")
+  tipo            TipoTag      @map("type")
   despesas        DespesaTag[]
+  gastos          Gasto[]
   criadoEm        DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
 
-  @@unique([contaFamiliaId, nomeNormalizado])
+  @@unique([contaFamiliaId, nomeNormalizado, tipo])
   @@map("tags")
 }
 
@@ -149,19 +167,42 @@ model Receita {
 }
 
 model CartaoCredito {
-  id              String       @id @default(uuid()) @db.Uuid
-  contaFamilia    ContaFamilia @relation(fields: [contaFamiliaId], references: [id], onDelete: Restrict)
-  contaFamiliaId  String       @map("family_account_id") @db.Uuid
-  nome            String       @map("name")
-  nomeNormalizado String       @map("normalized_name")
-  instituicao     String       @map("issuer")
-  limite          Decimal      @map("credit_limit") @db.Decimal(12, 2)
-  diaFechamento   Int          @map("closing_day") @db.SmallInt
-  diaVencimento   Int          @map("due_day") @db.SmallInt
-  cor             String?      @map("color") @db.Char(7)
-  criadoEm        DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
-  atualizadoEm    DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id              String         @id @default(uuid()) @db.Uuid
+  contaFamilia    ContaFamilia   @relation(fields: [contaFamiliaId], references: [id], onDelete: Restrict)
+  contaFamiliaId  String         @map("family_account_id") @db.Uuid
+  nome            String         @map("name")
+  nomeNormalizado String         @map("normalized_name")
+  instituicao     String         @map("issuer")
+  limite          Decimal        @map("credit_limit") @db.Decimal(12, 2)
+  limiteUsado     Decimal        @default(0) @map("used_limit") @db.Decimal(12, 2)
+  diaFechamento   Int            @map("closing_day") @db.SmallInt
+  diaVencimento   Int            @map("due_day") @db.SmallInt
+  cor             String?        @map("color") @db.Char(7)
+  gastos          Gasto[]
+  criadoEm        DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  atualizadoEm    DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@unique([contaFamiliaId, nomeNormalizado])
   @@map("credit_cards")
+}
+
+model Gasto {
+  id             String         @id @default(uuid()) @db.Uuid
+  contaFamilia   ContaFamilia   @relation(fields: [contaFamiliaId], references: [id], onDelete: Restrict)
+  contaFamiliaId String         @map("family_account_id") @db.Uuid
+  criadoPor      User           @relation("GastoCriadoPor", fields: [criadoPorId], references: [id])
+  criadoPorId    String         @map("created_by") @db.Uuid
+  nome           String         @map("name")
+  valor          Decimal        @map("amount") @db.Decimal(12, 2)
+  formaPagamento FormaPagamento @map("payment_method")
+  data           DateTime       @map("date") @db.Date
+  cartao         CartaoCredito? @relation(fields: [cartaoId], references: [id])
+  cartaoId       String?        @map("credit_card_id") @db.Uuid
+  tag            Tag?           @relation(fields: [tagId], references: [id], onDelete: SetNull)
+  tagId          String?        @map("tag_id") @db.Uuid
+  criadoEm       DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  atualizadoEm   DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([contaFamiliaId, data])
+  @@map("spendings")
 }

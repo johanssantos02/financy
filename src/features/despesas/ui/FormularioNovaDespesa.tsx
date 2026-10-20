@@ -5,13 +5,18 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-import { mascararValor, schemaDespesa, valorDaMascara } from "@/src/entities/despesa";
+import {
+  mascararValor,
+  schemaDespesa,
+  schemaEditarDespesa,
+  valorDaMascara,
+  type DetalheDespesa,
+} from "@/src/entities/despesa";
 import { lerFormData } from "@/src/shared/lib/formulario";
 import type { ErroAplicacao } from "@/src/shared/lib/resultado";
 
-import { criarDespesa } from "../api/acoes";
+import { criarDespesa, editarDespesa } from "../api/acoes";
 
-// A ordem define qual campo recebe o foco quando há mais de um inválido.
 const CAMPOS = ["nome", "descricao", "vencimento", "valor"] as const;
 type Campo = (typeof CAMPOS)[number];
 type ErrosPorCampo = Partial<Record<Campo, string>>;
@@ -52,7 +57,14 @@ function MensagemErro({ campo, mensagem }: { campo: Campo; mensagem?: string }) 
   );
 }
 
-export default function FormularioNovaDespesa({ origem }: { origem: string | null }) {
+const valorInicial = (despesa?: DetalheDespesa) =>
+  despesa?.valor ? mascararValor(Math.round(Number(despesa.valor) * 100).toString()) : "";
+
+type Props =
+  | { modo: "criar"; origem: string | null }
+  | { modo: "editar"; despesa: DetalheDespesa };
+
+export default function FormularioNovaDespesa(props: Props) {
   const router = useRouter();
   const formulario = useRef<HTMLFormElement>(null);
   const campoContinuar = useRef<HTMLInputElement>(null);
@@ -60,14 +72,17 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
   const [enviando, iniciarEnvio] = useTransition();
   const [concluido, setConcluido] = useState(false);
   const [continuarAdicionando, setContinuarAdicionando] = useState(false);
+  const [valorMascarado, setValorMascarado] = useState(() =>
+    props.modo === "editar" ? valorInicial(props.despesa) : ""
+  );
   const bloqueado = enviando || concluido;
 
   const voltar = () => {
-    if (origem !== null && window.history.length > 1) {
+    if (props.modo === "criar" && props.origem !== null && window.history.length > 1) {
       router.back();
       return;
     }
-    router.replace(origem ?? ROTA_PADRAO);
+    router.replace(ROTA_PADRAO);
   };
 
   const exibirErros = (novosErros: ErrosPorCampo) => {
@@ -89,19 +104,37 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
     const dados = new FormData(evento.currentTarget);
     dados.set("valor", valorDaMascara(String(dados.get("valor") ?? "")));
 
-    const validacao = schemaDespesa.safeParse(lerFormData(dados));
+    const validacao =
+      props.modo === "editar"
+        ? schemaEditarDespesa.safeParse(lerFormData(dados))
+        : schemaDespesa.safeParse(lerFormData(dados));
     if (!validacao.success) {
       toast.error(MENSAGEM_VALIDACAO);
-      exibirErros(primeiraMensagemPorCampo(z.flattenError(validacao.error).fieldErrors));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      exibirErros(primeiraMensagemPorCampo(z.flattenError(validacao.error as any).fieldErrors));
       return;
     }
 
     iniciarEnvio(async () => {
+      if (props.modo === "editar") {
+        const resultado = await editarDespesa(dados);
+        if (resultado.sucesso) {
+          toast.success("Despesa atualizada.");
+          setConcluido(true);
+          router.replace(ROTA_PADRAO);
+          return;
+        }
+        toast.error(resultado.erro.mensagem);
+        exibirErros(errosDoServidor(resultado.erro));
+        return;
+      }
+
       const resultado = await criarDespesa(dados);
       if (resultado.sucesso) {
         toast.success("Despesa cadastrada.");
         if (continuarAdicionando) {
           formulario.current?.reset();
+          setValorMascarado("");
           if (campoContinuar.current) campoContinuar.current.checked = true;
           setErros({});
           const nome = formulario.current?.elements.namedItem("nome");
@@ -120,6 +153,8 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
   const propsAcessibilidade = (campo: Campo) =>
     erros[campo] ? { "aria-invalid": true, "aria-describedby": `${campo}-erro` } : {};
 
+  const despesa = props.modo === "editar" ? props.despesa : undefined;
+
   return (
     <div className="flex flex-col gap-5">
       <form
@@ -129,6 +164,10 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
         onInput={limparErro}
         className="flex flex-col gap-5"
       >
+        {props.modo === "editar" && (
+          <input type="hidden" name="id" value={props.despesa.id} />
+        )}
+
         <div className="flex flex-col gap-1.5">
           <label htmlFor="nome" className={classeRotulo}>
             Nome *
@@ -140,6 +179,7 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
             maxLength={80}
             autoComplete="off"
             placeholder="Ex.: Internet"
+            defaultValue={despesa?.nome ?? ""}
             className={`h-11 ${classeCampo(Boolean(erros.nome))}`}
             {...propsAcessibilidade("nome")}
           />
@@ -155,6 +195,7 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
             name="descricao"
             maxLength={500}
             rows={3}
+            defaultValue={despesa?.descricao ?? ""}
             className={`py-2 ${classeCampo(Boolean(erros.descricao))}`}
             {...propsAcessibilidade("descricao")}
           />
@@ -170,6 +211,7 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
               id="vencimento"
               name="vencimento"
               type="date"
+              defaultValue={despesa?.vencimento ?? ""}
               className={`h-11 ${classeCampo(Boolean(erros.vencimento))}`}
               {...propsAcessibilidade("vencimento")}
             />
@@ -187,9 +229,8 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
               inputMode="numeric"
               autoComplete="off"
               placeholder="R$ 0,00"
-              onChange={(evento) => {
-                evento.target.value = mascararValor(evento.target.value);
-              }}
+              value={valorMascarado}
+              onChange={(evento) => setValorMascarado(mascararValor(evento.target.value))}
               className={`h-11 ${classeCampo(Boolean(erros.valor))}`}
               {...propsAcessibilidade("valor")}
             />
@@ -198,22 +239,28 @@ export default function FormularioNovaDespesa({ origem }: { origem: string | nul
         </div>
 
         <label className="flex min-h-11 items-center gap-3 text-sm text-texto">
-          <input type="checkbox" name="recorrente" className="h-5 w-5 accent-primaria" />
+          <input
+            type="checkbox"
+            name="recorrente"
+            defaultChecked={despesa?.recorrente ?? false}
+            className="h-5 w-5 accent-primaria"
+          />
           Despesa recorrente
         </label>
 
-        {/* Sem `name` para não ser enviado; o estado é restaurado após o reset do cadastro. */}
-        <label className="flex min-h-11 items-center gap-3 text-sm text-texto">
-          <input
-            ref={campoContinuar}
-            type="checkbox"
-            checked={continuarAdicionando}
-            onChange={(evento) => setContinuarAdicionando(evento.target.checked)}
-            disabled={bloqueado}
-            className="h-5 w-5 accent-primaria"
-          />
-          Continuar adicionando despesas
-        </label>
+        {props.modo === "criar" && (
+          <label className="flex min-h-11 items-center gap-3 text-sm text-texto">
+            <input
+              ref={campoContinuar}
+              type="checkbox"
+              checked={continuarAdicionando}
+              onChange={(evento) => setContinuarAdicionando(evento.target.checked)}
+              disabled={bloqueado}
+              className="h-5 w-5 accent-primaria"
+            />
+            Continuar adicionando despesas
+          </label>
+        )}
 
         <div className="flex gap-3">
           <button

@@ -8,11 +8,13 @@ BEGIN
     SELECT "id" INTO vivih_id FROM "users" WHERE "email" = 'cardosovivihsantos@gmail.com';
 
     IF johan_id IS NULL THEN
-        RAISE EXCEPTION 'Usuário johancardoso1911@gmail.com não encontrado';
+        RAISE NOTICE 'Usuário johancardoso1911@gmail.com não encontrado - ignorando';
+        RETURN;
     END IF;
 
     IF vivih_id IS NULL THEN
-        RAISE EXCEPTION 'Usuário cardosovivihsantos@gmail.com não encontrado';
+        RAISE NOTICE 'Usuário cardosovivihsantos@gmail.com não encontrado - ignorando';
+        RETURN;
     END IF;
 
     UPDATE "users"
